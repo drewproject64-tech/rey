@@ -15,9 +15,9 @@ The summary is extractive and offline. It is not a generative AI service or a co
 3. Install packages with `python -m pip install -r requirements.txt`.
 4. Start locally with `python main.py`.
 
-At startup, the code sets the bot's **name**, **About** (short description), **Description**, and the /start, /help, and /cancel commands using the Telegram Bot API. Confirm those details in BotFather after first deployment.
+At startup, the code sets the bot's **name**, **About** (short description), **Description**, and the /start, /help, and /cancel commands using the Telegram Bot API. Confirm those details in BotFather after first deployment. The bot also checks whether its public profile photo is missing and uploads an original IA DEL REY avatar automatically if needed.
 
-**Set an original profile picture manually in BotFather.** The normal Telegram Bot API does not provide a method for setting the bot avatar.
+**Profile photo:** The bot automatically creates and uploads an original avatar if its profile has no photo. If Telegram denies the update, use BotFather → Edit Bot → Edit Botpic as a fallback. Existing photos are not overwritten.
 
 ## Render deployment
 
