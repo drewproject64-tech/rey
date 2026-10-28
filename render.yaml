@@ -1,0 +1,7 @@
+services:
+  - type: worker
+    name: ia-del-rey
+    runtime: docker
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
