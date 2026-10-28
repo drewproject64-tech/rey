@@ -7,7 +7,7 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandStart
-from aiogram.types import BotCommand, KeyboardButton, Message, ReplyKeyboardMarkup
+from aiogram.types import BotCommand, BufferedInputFile, InputProfilePhotoStatic, KeyboardButton, Message, ReplyKeyboardMarkup
 
 from text_tools import format_text, summarize_text
 
@@ -157,6 +157,26 @@ async def configure_profile(bot: Bot) -> None:
             logging.exception("Could not update part of the Telegram bot profile")
 
 
+async def ensure_profile_image(bot: Bot) -> None:
+    """Create a branded profile picture only when none exists."""
+    try:
+        me = await bot.get_me()
+        photos = await bot.get_user_profile_photos(user_id=me.id, limit=1)
+        if photos.total_count:
+            logging.info("Bot profile already has a photo; leaving it unchanged")
+            return
+
+        from profile_image import make_profile_photo
+
+        picture = BufferedInputFile(make_profile_photo(), filename="ia-del-rey.jpg")
+        result = await bot.set_my_profile_photo(
+            photo=InputProfilePhotoStatic(photo=picture)
+        )
+        logging.info("Set missing IA DEL REY profile photo: %s", result)
+    except TelegramAPIError:
+        logging.exception("Could not set bot profile photo; update via BotFather")
+
+
 async def main() -> None:
     token = os.getenv("BOT_TOKEN", "").strip()
     if not token:
@@ -166,6 +186,7 @@ async def main() -> None:
     bot = Bot(token=token)
     try:
         await configure_profile(bot)
+        await ensure_profile_image(bot)
         await bot.delete_webhook(drop_pending_updates=False)
         logging.info("Starting IA DEL REY polling")
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
