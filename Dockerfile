@@ -3,7 +3,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY main.py text_tools.py ./
+COPY main.py text_tools.py profile_image.py ./
 RUN useradd -m botuser
 USER botuser
 CMD ["python", "main.py"]
